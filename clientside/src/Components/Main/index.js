@@ -1,7 +1,4 @@
 import React from 'react'
-import XMLParser from 'react-xml-parser';
-
-let nested = ''
 
 class Main extends React.Component{
 
@@ -115,12 +112,9 @@ tags(xml){
 
         // let data = result.parentNode.getElementsByTagName('key')[0].getElementsByTagName('string')[0].innerHTML
 
-         // console.log(result.attributes[0].nodeValue)
+
          console.log(result)
 
-         // let attribute =  result.attributes[0].nodeValue
-
-        // this.setState({ data: [...this.state.data, result ] })
         result = nodes.iterateNext();
       }
       console.log(count)
@@ -209,8 +203,6 @@ getData(xml){
       let arr = [...set]
 
       console.log(arr)
-
-
         if(set.size > 0){
             return arr.map((item, i) => {
               return <div> {item.toLowerCase()}</div>

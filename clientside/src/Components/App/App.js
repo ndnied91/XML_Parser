@@ -1,14 +1,14 @@
 
 
 import Header from '../Header'
-import Main from '../Main'
+import BizRuleParser from '../BizRuleParser'
 
 function App() {
   return (
     <div className="App">
       <Header/>
 
-      <Main/>
+      <BizRuleParser/>
     </div>
   );
 }

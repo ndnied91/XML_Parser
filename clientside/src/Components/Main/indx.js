@@ -1,7 +1,4 @@
 import React from 'react'
-import XMLParser from 'react-xml-parser';
-
-let nested = ''
 
 class Main extends React.Component{
 

@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class BizRuleParser extends React.Component{
   constructor(props) {
      super(props);
-     this.state = { data: [] , searchTerm: 'chat-spec-id' , numberOfBrs : 0 , undefinedCount: 0 };
+     this.state = { data: [] , searchTerm: 'c2c-theme-id' , numberOfBrs : 0 , undefinedCount: 0 };
      this.onInputchange = this.onInputchange.bind(this);
    }
 
@@ -44,7 +44,13 @@ class BizRuleParser extends React.Component{
               let brName = name.getAttributeNode('name').value
 
               if(searchTerm !== undefined){
-                condition = searchTerm.children[0].textContent
+                if(searchTerm.children[0].attributes.length >0){
+                  condition = searchTerm.children[0].attributes[0].nodeValue
+                }
+                else{
+                  condition = searchTerm.children[0].textContent
+                }
+
                 obj = {brName , condition}
               }
               else{

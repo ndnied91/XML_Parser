@@ -71,7 +71,7 @@ class BizRuleParser extends React.Component{
 
       const getResponseXML = async (e) => {
         e.preventDefault()
-        const xml = await fetch("test.xml");
+        const xml = await fetch("file.xml");
         const parsedXML = await xml.text();
         getRules(new window.DOMParser().parseFromString(parsedXML, "text/xml"));
       };

@@ -24,9 +24,7 @@ class BizRuleParser extends React.Component{
 
 
   render(){
-
       let data = []
-      // let str = ''
 
       const getRules = (xml) => {
         const names = xml.getElementsByTagName("business-rule");
@@ -38,31 +36,29 @@ class BizRuleParser extends React.Component{
         // let keyWord = 'c2c-theme-id'
 
 
+            for (let i = 0; i < names.length; i++) {
+              let name = names[i];
+              let searchTerm = name.getElementsByTagName(this.state.searchTerm)[0]
+              let condition = ''
+              let obj = {}
+              let brName = name.getAttributeNode('name').value
 
-        for (let i = 0; i < names.length; i++) {
-          let name = names[i];
-          let searchTerm = name.getElementsByTagName(this.state.searchTerm)[0]
-          let condition = ''
-          let obj = {}
-          let brName = name.getAttributeNode('name').value
+              if(searchTerm !== undefined){
+                condition = searchTerm.children[0].textContent
+                obj = {brName , condition}
+              }
+              else{
+                undefinedCount++
+                name = name.getAttributeNode('name').value
+                condition = 'DEFAULT'
+                obj = {brName , condition}
+              }
 
-          if(searchTerm !== undefined){
-            condition = searchTerm.children[0].textContent
-            obj = {brName , condition}
-          }
-          else{
-            undefinedCount++
-            name = name.getAttributeNode('name').value
-            condition = 'DEFAULT'
-            obj = {brName , condition}
-          }
+              data.push(obj)
 
-          data.push(obj)
+            }
 
-        }
         this.setState({numberOfBrs , undefinedCount})
-
-
         this.setState({data: data.sort((a, b) => (a.condition > b.condition) ? 1 : -1)})
       };
 
@@ -96,8 +92,6 @@ class BizRuleParser extends React.Component{
            </div>
       )
     })
-
-
   }
 
 
@@ -105,8 +99,7 @@ class BizRuleParser extends React.Component{
 
 const downloadTxtFile = () => {
   const element = document.createElement("a");
-  const file = new Blob([str],
-              {type: 'text/plain;charset=utf-8'});
+  const file = new Blob([str],{type: 'text/plain;charset=utf-8'});
   element.href = URL.createObjectURL(file);
   element.download =  ".txt";
   element.download =  `${this.state.searchTerm}.txt`;

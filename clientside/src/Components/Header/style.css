@@ -1,4 +1,9 @@
 .mainheader{
   text-align: center;
   font-size: 20px;
+  padding: 20px;
+}
+
+.mainheader h1{
+  letter-spacing: 2px;
 }

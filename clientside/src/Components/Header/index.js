@@ -6,7 +6,7 @@ import './style.css'
 class Header extends React.Component{
   render(){
     return <div className="mainheader">
-      <h4> XML Parser </h4>
+      <h1> XML Parser </h1>
     </div>
   }
 }

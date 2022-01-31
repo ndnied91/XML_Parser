@@ -1,29 +1,36 @@
 import React from 'react'
 
-// import './style.css'
+import './style.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
 class BizRuleParser extends React.Component{
   constructor(props) {
      super(props);
-     this.state = { data: [] , searchTerm: '' , selection: ''};
+     this.state = { data: [] , searchTerm: 'chat-spec-id' , numberOfBrs : 0 , undefinedCount: 0 };
      this.onInputchange = this.onInputchange.bind(this);
-     this.handleChange = this.handleChange.bind(this);
    }
 
-   handleChange(e){ this.setState({selection:e.target.value}); }
-
   onInputchange(event) {
-    this.setState({searchTerm: event.target.value}, () => {
+    this.setState({searchTerm: event.target.value }, () => {
+        this.setState({data: [], numberOfBrs:0 })
         console.log(this.state);
     });
+
 }
+
 
 
 
   render(){
 
+      let data = []
+      // let str = ''
+
       const getRules = (xml) => {
         const names = xml.getElementsByTagName("business-rule");
-        let numberofBrs = names.length
+        let numberOfBrs = names.length
         let undefinedCount = 0
         // let keyWord = 'c2c-spec-id'
         // let keyWord = 'show-c2chat'
@@ -32,62 +39,110 @@ class BizRuleParser extends React.Component{
 
 
 
-
-
-
-
-
         for (let i = 0; i < names.length; i++) {
           let name = names[i];
           let searchTerm = name.getElementsByTagName(this.state.searchTerm)[0]
-
-            console.log(name.getAttributeNode('name'))
+          let condition = ''
+          let obj = {}
+          let brName = name.getAttributeNode('name').value
 
           if(searchTerm !== undefined){
-            console.log(searchTerm)
-            // console.log(searchTerm.getElementsByTagName('number')[0])
-            // console.log(name.getAttributeNode('name'))
-            // console.log(searchTerm.getAttributeNode('number'))
-            // getAttribute
+            condition = searchTerm.children[0].textContent
+            obj = {brName , condition}
           }
           else{
             undefinedCount++
-            console.log('not set')
+            name = name.getAttributeNode('name').value
+            condition = 'DEFAULT'
+            obj = {brName , condition}
           }
 
+          data.push(obj)
 
         }
-        console.log('number of business-rules is' , numberofBrs)
-        console.log(`number of brs not using overriding ${this.state.searchTerm} is ${undefinedCount}` )
-        console.log(`number of brs using default c2c specs is ${undefinedCount}` )
-        console.log(`number of brs overriding c2c spec is  ${(numberofBrs - undefinedCount)}` )
+        this.setState({numberOfBrs , undefinedCount})
 
+
+        this.setState({data: data.sort((a, b) => (a.condition > b.condition) ? 1 : -1)})
       };
 
-      const getResponseXML = async () => {
-        // get XML
-        // retrieve XML
-        const xml = await fetch("ups1.xml");
+
+      const getResponseXML = async (e) => {
+        e.preventDefault()
+        const xml = await fetch("ups.xml");
         const parsedXML = await xml.text();
         getRules(new window.DOMParser().parseFromString(parsedXML, "text/xml"));
       };
 
 
 
-    return <div className="mainheader">
-        <h1> Parser For Biz Rules</h1>
+  let str = ''
+  const renderData = () =>{
+    return this.state.data.map((i , index)=>{
+        str = str + i.brName
+        str = str + " : "
+        str = str+ i.condition
+        str = str + '\n'
 
-        <div>
-            <input  name="searchTerm" placeholder="enter xml tag" type="text" value={this.state.searchTerm} onChange={this.onInputchange} required />
-        </div>
+      return(
+            <div key={index} style={{ margin: '10px'}}>
+                <span className="names">
+                      {i.condition === 'DEFAULT' ? <span style={{color: "red"}}> {i.brName} </span> : <span> {i.brName}  </span> }
+                </span>
 
-        <button onClick={()=>getResponseXML()}> Search </button>
+                <span className="conditions">
+                      {i.condition === 'DEFAULT' ? <span style={{color: "red"}}>  {i.condition} </span> : <span> {i.condition} </span> }
+                </span>
+           </div>
+      )
+    })
 
-    </div>
+
   }
+
+
+
+
+const downloadTxtFile = () => {
+  const element = document.createElement("a");
+  const file = new Blob([str],
+              {type: 'text/plain;charset=utf-8'});
+  element.href = URL.createObjectURL(file);
+  element.download =  ".txt";
+  element.download =  `${this.state.searchTerm}.txt`;
+  document.body.appendChild(element);
+  element.click();
 }
 
 
-export default BizRuleParser
+const renderReport = ()=>{
+return(
+  <div className="top_info">
+    <div> Number of Business Rules in XML File : <strong>{this.state.numberOfBrs} </strong> </div>
+      <div> Number of BR's not overriding <strong> {this.state.searchTerm} </strong> : <strong> {this.state.undefinedCount} </strong></div>
+      <div> Number of brs overriding  <strong>{this.state.searchTerm}</strong> : <strong>{(this.state.numberOfBrs - this.state.undefinedCount)}</strong> </div>
+      <div> <button className="btn btn-outline-danger" onClick={downloadTxtFile}>Download</button> </div>
+  </div>
+)
+}
 
-// https://stackoverflow.com/questions/27116085/javascript-search-xml-by-tag-and-get-the-sibling-nodes
+
+    return(
+      <div className="mainheader">
+          <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+              <form class="d-flex">
+                    <input className="form-control me-2 widthChange" name="searchTerm" placeholder="Enter XML Tag" type="text" value={this.state.searchTerm} onChange={this.onInputchange} required />
+                <button className="btn btn-outline-dark" onClick={(e)=>getResponseXML(e)}> Search </button>
+              </form>
+            </div>
+          </nav>
+
+              {this.state.numberOfBrs > 0 ? renderReport() : null}
+              <div id="entireList"> {renderData()} </div>
+    </div>
+    )
+  }
+}
+
+export default BizRuleParser

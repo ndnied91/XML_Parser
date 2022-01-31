@@ -1,0 +1,45 @@
+
+
+.d-flex {
+    width: 450px;
+}
+
+
+.container-fluid{
+  justify-content: center !important;
+}
+
+
+.btn-outline-danger{
+    margin-top: 40px !important;
+    width: 500px !important;
+}
+
+
+#entireList{
+      margin-top: 40px;
+      text-align: initial;
+      padding-left: 10%;
+      padding-right: 10%;
+}
+
+
+.top_info{
+  padding-top: 40px;
+  letter-spacing: 2px;
+}
+
+
+.names{
+  padding-left: 10px;
+}
+
+.conditions{
+  float: right;
+  padding-right: 10px;
+}
+
+
+#entireList div:nth-child(2n) {
+  background-color: #EEEEEE;
+}

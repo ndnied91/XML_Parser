@@ -43,3 +43,15 @@
 #entireList div:nth-child(2n) {
   background-color: #EEEEEE;
 }
+
+
+.titles{
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.titles span{
+  font-size: 25px;
+}

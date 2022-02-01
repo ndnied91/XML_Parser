@@ -138,7 +138,15 @@ return(
           </nav>
 
               {this.state.numberOfBrs > 0 ? renderReport() : null}
-              <div id="entireList"> {renderData()} </div>
+
+              <div id="entireList">
+
+              {this.state.numberOfBrs > 0 ?  <div className="titles"> <span> Business Rules</span> <span> {this.state.searchTerm}</span></div> : null }
+
+
+                {renderData()}
+                </div>
+
     </div>
     )
   }

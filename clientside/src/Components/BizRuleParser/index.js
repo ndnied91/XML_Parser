@@ -10,6 +10,8 @@ class BizRuleParser extends React.Component{
      super(props);
      this.state = { data: [] , searchTerm: 'c2c-theme-id' , numberOfBrs : 0 , undefinedCount: 0 };
      this.onInputchange = this.onInputchange.bind(this);
+     this.variances = new Map()
+     this.testVarible= "this is a test";
    }
 
   onInputchange(event) {
@@ -25,6 +27,9 @@ class BizRuleParser extends React.Component{
 
   render(){
       let data = []
+
+
+
 
       const getRules = (xml) => {
         const names = xml.getElementsByTagName("business-rule");
@@ -51,12 +56,21 @@ class BizRuleParser extends React.Component{
                   condition = searchTerm.children[0].textContent
                 }
 
-                obj = {brName , condition}
+                if(!this.variances.has( condition )){ this.variances.set(  condition , 1); }
+                  else{ this.variances.set(  condition , this.variances.get(  condition )+1); }
+
+                  obj = {brName , condition}
+
+
               }
               else{
                 undefinedCount++
                 name = name.getAttributeNode('name').value
                 condition = 'DEFAULT'
+
+                if(!this.variances.has( condition )){ this.variances.set(  condition , 1); }
+                  else{  this.variances.set(  condition , this.variances.get(  condition )+1); }
+
                 obj = {brName , condition}
               }
 
@@ -66,7 +80,12 @@ class BizRuleParser extends React.Component{
 
         this.setState({numberOfBrs , undefinedCount})
         this.setState({data: data.sort((a, b) => (a.condition > b.condition) ? 1 : -1)})
+
+        console.log(this.variances)
       };
+
+
+
 
 
       const getResponseXML = async (e) => {
@@ -114,6 +133,19 @@ const downloadTxtFile = () => {
 }
 
 
+const renderVariances = ()=>{
+    if(this.variances.size > 0){
+
+      [...this.variances].map((i)=>{
+        console.log(i)
+      })
+
+
+    }
+
+
+}
+
 const renderReport = ()=>{
 return(
   <div className="top_info">
@@ -121,6 +153,10 @@ return(
       <div> Number of BR's not overriding <strong> {this.state.searchTerm} </strong> : <strong> {this.state.undefinedCount} </strong></div>
       <div> Number of brs overriding  <strong>{this.state.searchTerm}</strong> : <strong>{(this.state.numberOfBrs - this.state.undefinedCount)}</strong> </div>
       <div> <button className="btn btn-outline-danger" onClick={downloadTxtFile}>Download</button> </div>
+
+
+        {renderVariances()}
+
   </div>
 )
 }
@@ -128,9 +164,9 @@ return(
 
     return(
       <div className="mainheader">
-          <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-              <form class="d-flex">
+          <nav className="navbar navbar-light bg-light">
+            <div className="container-fluid">
+              <form className="d-flex">
                     <input className="form-control me-2 widthChange" name="searchTerm" placeholder="Enter XML Tag" type="text" value={this.state.searchTerm} onChange={this.onInputchange} required />
                 <button className="btn btn-outline-dark" onClick={(e)=>getResponseXML(e)}> Search </button>
               </form>
@@ -138,6 +174,8 @@ return(
           </nav>
 
               {this.state.numberOfBrs > 0 ? renderReport() : null}
+
+
 
               <div id="entireList">
 

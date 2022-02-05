@@ -80,8 +80,6 @@ class BizRuleParser extends React.Component{
 
         this.setState({numberOfBrs , undefinedCount})
         this.setState({data: data.sort((a, b) => (a.condition > b.condition) ? 1 : -1)})
-
-        console.log(this.variances)
       };
 
 
@@ -136,8 +134,10 @@ const downloadTxtFile = () => {
 const renderVariances = ()=>{
     if(this.variances.size > 0){
 
-      [...this.variances].map((i)=>{
-        console.log(i)
+      return [...this.variances].map((i, idx)=>{
+        return(
+              <div className="ind_res" key={idx}> <span>{i[0]} : {i[1]} </span> </div>
+        )
       })
 
 
@@ -152,10 +152,20 @@ return(
     <div> Number of Business Rules in XML File : <strong>{this.state.numberOfBrs} </strong> </div>
       <div> Number of BR's not overriding <strong> {this.state.searchTerm} </strong> : <strong> {this.state.undefinedCount} </strong></div>
       <div> Number of brs overriding  <strong>{this.state.searchTerm}</strong> : <strong>{(this.state.numberOfBrs - this.state.undefinedCount)}</strong> </div>
+
+
+
+      <div className="var_results">
+            <p> Number of <strong>{this.state.searchTerm}</strong>'s being used </p>
+            <div className="results"> {renderVariances()} </div>
+      </div>
+
+
+
       <div> <button className="btn btn-outline-danger" onClick={downloadTxtFile}>Download</button> </div>
 
 
-        {renderVariances()}
+
 
   </div>
 )

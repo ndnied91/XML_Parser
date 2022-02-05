@@ -55,3 +55,29 @@
 .titles span{
   font-size: 25px;
 }
+
+
+
+.results {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+
+
+.ind_res{
+  background-color: #EEEEEE;
+  margin: 10px;
+  letter-spacing: 0px;
+  padding: 10px;
+  border-radius: 5px;
+  height: 80%;
+  box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.05);
+}
+
+
+.var_results{
+  padding-top: 35px;
+}
